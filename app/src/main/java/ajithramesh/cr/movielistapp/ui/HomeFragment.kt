@@ -28,25 +28,29 @@ class HomeFragment : Fragment() {
     private lateinit var mClient: OkHttpClient
     private var MainArray: ArrayList<MainModel> = ArrayList()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fetchData()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_home, container, false)
-        fetchData()
-
         v.homeRecycler.setHasFixedSize(true)
         v.homeRecycler.layoutManager = LinearLayoutManager(context)
-        v.homeRecycler.adapter = HomeAdapter(context!!, MainArray!!)
+
 
         return v
     }
 
-
+    /*
+     * API is called here
+     */
     private fun fetchData() {
         mClient = OkHttpClient();
-
         val request = Request.Builder()
             .url("https://swapi.co/api/films/")
             .addHeader("Content-Type", " application/x-www-form-urlencoded")
@@ -78,7 +82,7 @@ class HomeFragment : Fragment() {
                         try {
                             val responseJson = JSONObject(responseString)
                             val results: JSONArray = responseJson.getJSONArray("results")
-
+                            MainArray.clear()
                             for (x in 0..results.length() - 1) {
                                 val currentObject = results.getJSONObject(x)
                                 val titleValue = currentObject.getString("title")
@@ -102,11 +106,11 @@ class HomeFragment : Fragment() {
                             }
 
                             view!!.homeRecycler.adapter = HomeAdapter(context!!, MainArray!!)
+                            view!!.home_progress.visibility = View.INVISIBLE
 
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-
 
                     }
                 }

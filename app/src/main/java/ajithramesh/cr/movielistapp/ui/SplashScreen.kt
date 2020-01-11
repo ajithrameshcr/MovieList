@@ -22,15 +22,16 @@ class SplashScreen : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-
         val v = inflater.inflate(R.layout.fragment_splash_screen, container, false)
 
 
-
+        // 1800 milli sec delay for splash page We can call API here for faster data parsing
         handler = Handler()
-        ru = object:Runnable {
-             override fun run() {
+        ru = object : Runnable {
+            override fun run() {
+                val homeFrag: HomeFragment = HomeFragment()
+                fragmentManager!!.beginTransaction()
+                    .replace(R.id.main_container, homeFrag, "homeFrag").commit()
 
             }
         }
@@ -48,7 +49,7 @@ class SplashScreen : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        handler!!.postDelayed(ru,1800)
+        handler!!.postDelayed(ru, 1800)
     }
 }
 
